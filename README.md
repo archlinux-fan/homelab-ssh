@@ -7,9 +7,10 @@ update their Docker Compose stacks, copy config files to them or run one command
 
 ## Why
 
-For a handful of servers and a few routine jobs, Ansible is a lot to learn: inventories, playbooks, modules, YAML.
-This is one menu instead: choose a tag, choose hosts, choose an action. Every action is a short Bash script
-you can read in a few minutes and change.
+Ansible is powerful, and for many servers or complex setups it's the right tool. But for a small homelab
+you often need just a handful of SSH commands, and Ansible is a lot to learn first: inventories, playbooks,
+modules, YAML. This is one menu instead: choose a tag, choose hosts, choose an action. Every action is a short
+Bash script you can read in a few minutes and change.
 
 ## What it does
 
