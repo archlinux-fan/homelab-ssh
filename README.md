@@ -99,3 +99,7 @@ Made with a demo setup: the real scripts and menus, the servers' answers are mad
 
 The desktop in the pictures, with mango, waybar, foot and the Nord colours, is
 [arch-dots](https://github.com/archlinux-fan/arch-dots).
+
+## License
+
+[MIT](LICENSE): use, change and share it as you like; keep the copyright notice.
