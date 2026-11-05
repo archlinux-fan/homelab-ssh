@@ -1,0 +1,22 @@
+# homelab-ssh settings. Copy to ~/.config/homelab/config and fill in.
+# Keep your copy in a private repo of your own, never in this one.
+
+# Where the "Sync ..." actions take the files from: the raw-file address of a repo
+# that holds them under their server paths (etc/nanorc, etc/ssh/sshrc, etc/ssh/sshd_config,
+# etc/sudoers.d/homelab, usr/local/bin/notify-os-updates.sh).
+#   Gitea:  https://git.example.com/you/homelab/raw/branch/main
+#   GitHub: https://raw.githubusercontent.com/you/homelab/main
+SYNC_BASE=""
+
+# "Sync .zshrc": a folder of zsh parts (*.zsh), joined in name order into /etc/zsh/zshrc.
+# Give it as the contents API address of that folder; parts named in ZSH_SKIP
+# (without number and .zsh) stay out. The zsh parts of arch-dots work as they are:
+#   https://api.github.com/repos/archlinux-fan/arch-dots/contents/.config/zsh/conf.d
+#   Gitea:  https://git.example.com/api/v1/repos/you/dots/contents/.config/zsh/conf.d
+ZSH_PARTS_API=""
+ZSH_SKIP="git pacman"
+
+# "Update Docker Compose Stack(s)": the folder on the servers with one folder per stack.
+# If a scan finds nothing, ~/.config/homelab/docker_folders.conf can list them by hand,
+# one line per host:  web1:nextcloud,traefik
+DOCKER_BASE_DIR="/srv/docker-compose"
