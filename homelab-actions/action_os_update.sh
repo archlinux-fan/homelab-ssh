@@ -7,7 +7,7 @@ while [ $i -lt ${#HOSTS[@]} ]; do
     HOST=${HOSTS[$i]}
     new_screen
     echo -e "${C_SUB}======================================================="
-    menu_title SUB "➜ RUNNING SYSTEM UPDATE: $HOST"
+    menu_title SUB "➜ SYSTEM UPDATE: $HOST"
     echo -e "=======================================================\033[0m"
 
     if ! check_host_alive "$HOST"; then

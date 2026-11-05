@@ -46,7 +46,7 @@ while [ $i -lt ${#HOSTS[@]} ]; do
     HOST=${HOSTS[$i]}
     new_screen
     echo -e "${C_SUB}======================================================="
-    menu_title SUB "➜ UPDATING DOCKER STACKS: $HOST"
+    menu_title SUB "➜ UPDATE DOCKER STACKS: $HOST"
     echo -e "=======================================================\033[0m"
 
     if ! check_host_alive "$HOST"; then
