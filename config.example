@@ -6,6 +6,7 @@
 # etc/sudoers.d/homelab, usr/local/bin/notify-os-updates.sh).
 #   Gitea:  https://git.example.com/you/homelab/raw/branch/main
 #   GitHub: https://raw.githubusercontent.com/you/homelab/main
+#   A private repo needs a login there; a local clone of it needs none: file:///home/you/homelab
 SYNC_BASE=""
 
 # "Sync .zshrc": a folder of zsh parts (*.zsh), joined in name order into /etc/zsh/zshrc.

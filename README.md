@@ -58,7 +58,8 @@ The main menu lists every tag; picking one lists its hosts. The rules, and how t
 ## The files it copies
 
 The "Sync" actions take the files from a repo of yours, best a private one, where each file sits under its
-path on the server. `SYNC_BASE` in `~/.config/homelab/config` is its raw-file address:
+path on the server. `SYNC_BASE` in `~/.config/homelab/config` is its raw-file address, or for a private
+repo the path of your local clone (`file:///home/you/homelab`), so no login is needed:
 
 ```
 your-repo/
