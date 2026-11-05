@@ -87,16 +87,17 @@ helpers (`check_host_alive`, `confirm_next`) and the exit codes that send you ba
 
 Made with a demo setup: the real scripts and menus, the servers' answers are made up.
 
-| | |
-|---|---|
-| ![Main menu](screenshots/main-menu.png) | ![Host menu](screenshots/host-menu.png) |
-| Main menu: the tags from `~/.ssh/config` | Hosts with the tag Debian |
-| ![Action menu](screenshots/action-menu.png) | ![Docker stacks](screenshots/docker-stacks.png) |
-| Actions for the chosen host | Docker: the stacks found on the host |
-| ![Docker update](screenshots/docker-update.png) | ![System update](screenshots/os-update.png) |
-| One stack updated, old images pruned | System update |
-| ![Custom command](screenshots/custom-command.png) | ![Unreachable host](screenshots/unreachable.gif) |
-| `uptime` on three hosts | A host that is off: wait, then retry or skip |
+<!-- HTML, so both columns are half the width whatever the captions -->
+<table>
+<tr><td width="50%"><img src="screenshots/main-menu.png" alt="Main menu"></td><td width="50%"><img src="screenshots/host-menu.png" alt="Host menu"></td></tr>
+<tr><td>Main menu: the tags from <code>~/.ssh/config</code></td><td>Hosts with the tag Debian</td></tr>
+<tr><td width="50%"><img src="screenshots/action-menu.png" alt="Action menu"></td><td width="50%"><img src="screenshots/docker-stacks.png" alt="Docker stacks"></td></tr>
+<tr><td>Actions for the chosen host</td><td>Docker: the stacks found on the host</td></tr>
+<tr><td width="50%"><img src="screenshots/docker-update.png" alt="Docker update"></td><td width="50%"><img src="screenshots/os-update.png" alt="System update"></td></tr>
+<tr><td>One stack updated, old images pruned</td><td>System update</td></tr>
+<tr><td width="50%"><img src="screenshots/custom-command.png" alt="Custom command"></td><td width="50%"><img src="screenshots/unreachable.gif" alt="Unreachable host"></td></tr>
+<tr><td><code>uptime</code> on three hosts</td><td>A host that is off: wait, then retry or skip</td></tr>
+</table>
 
 The desktop in the pictures, with mango, waybar, foot and the Nord colours, is
 [arch-dots](https://github.com/archlinux-fan/arch-dots).
