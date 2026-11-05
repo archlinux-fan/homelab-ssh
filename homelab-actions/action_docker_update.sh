@@ -44,7 +44,8 @@ list_fallback_folders() {
 i=0
 while [ $i -lt ${#HOSTS[@]} ]; do
     HOST=${HOSTS[$i]}
-    echo -e "\n${C_SUB}======================================================="
+    new_screen
+    echo -e "${C_SUB}======================================================="
     menu_title SUB "➜ UPDATING DOCKER STACKS: $HOST"
     echo -e "=======================================================\033[0m"
 

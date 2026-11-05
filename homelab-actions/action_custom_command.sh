@@ -3,6 +3,7 @@
 HOSTS=($TARGET_HOSTS)
 source "$(dirname "$0")/libs/lib_check_host.sh"
 
+new_screen
 menu_title SUB "=== RUN CUSTOM AD-HOC COMMAND ==="
 ask "Enter command to execute ([Enter] back, [q] quit): " CUSTOM_CMD
 [[ "$CUSTOM_CMD" == "q" || "$CUSTOM_CMD" == "Q" ]] && { echo "Quit."; exit 0; }

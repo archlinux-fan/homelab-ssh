@@ -5,7 +5,8 @@ source "$(dirname "$0")/libs/lib_check_host.sh"
 i=0
 while [ $i -lt ${#HOSTS[@]} ]; do
     HOST=${HOSTS[$i]}
-    echo -e "\n${C_SUB}======================================================="
+    new_screen
+    echo -e "${C_SUB}======================================================="
     menu_title SUB "➜ RUNNING SYSTEM UPDATE: $HOST"
     echo -e "=======================================================\033[0m"
 

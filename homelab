@@ -41,6 +41,16 @@ if [ ! -f "$SSH_CONFIG" ]; then
     exit 1
 fi
 
+# Every menu on a new screen; NOTE is shown on top of it (e.g. an invalid choice).
+# After an action the next menu goes under its output instead (KEEP), so its
+# results stay readable.
+NOTE="" KEEP=""
+screen() {
+    if [ -n "$KEEP" ]; then echo; else new_screen; fi
+    [ -n "$NOTE" ] && echo -e "$NOTE\n"
+    NOTE="" KEEP=""
+}
+
 # Main loop to allow going back between menus
 while true; do
 
@@ -53,6 +63,7 @@ while true; do
         exit 1
     fi
 
+    screen
     menu_title MAIN "=== MAIN MENU: SELECT TAG ==="
     for i in "${!ALL_TAGS[@]}"; do
         # Display index+1 so numbering starts at [1]
@@ -76,7 +87,7 @@ while true; do
 
     # Validate the number (between 1 and the number of tags)
     if ! [[ "$TAG_REPLY" =~ ^[0-9]+$ ]] || [ "$TAG_REPLY" -le 0 ] || [ "$TAG_REPLY" -gt "${#ALL_TAGS[@]}" ]; then
-        echo -e "\033[1;31m[!] Invalid choice.\033[0m\n"
+        NOTE="\033[1;31m[!] Invalid choice: $TAG_REPLY\033[0m"
         continue
     fi
 
@@ -98,6 +109,7 @@ while true; do
     # --- STEP 1b: SUB-SELECT INDIVIDUAL HOST OR ALL ---
     # Own loop, so [b] in the action menu lands back here (same tag kept).
     while true; do
+        screen
         menu_title HOST "=== HOST MENU: TAG [$SELECTED_TAG] ==="
         echo "  [Enter] ALL HOSTS IN THIS TAG"
         for i in "${!MATCHED_HOSTS[@]}"; do
@@ -116,7 +128,6 @@ while true; do
         fi
 
         if [[ "$HOST_REPLY" == "b" || "$HOST_REPLY" == "B" ]]; then
-            echo -e "\033[1;36m↩ Back to main menu...\033[0m\n"
             continue 2
         fi
 
@@ -130,19 +141,13 @@ while true; do
             IFS=', ' read -ra PICKS <<< "$HOST_REPLY"
             for p in "${PICKS[@]}"; do
                 if ! [[ "$p" =~ ^[0-9]+$ ]] || [ "$p" -le 0 ] || [ "$p" -gt "${#MATCHED_HOSTS[@]}" ]; then
-                    echo -e "\033[1;31m[!] Invalid host selection: $p\033[0m\n"
+                    NOTE="\033[1;31m[!] Invalid host selection: $p\033[0m"
                     continue 2
                 fi
                 H="${MATCHED_HOSTS[$((p-1))]}"
                 [[ " ${FINAL_HOSTS[*]} " == *" $H "* ]] || FINAL_HOSTS+=("$H") # skip duplicates
             done
         fi
-
-        echo -e "\n\033[1;32m➜ Selected target(s):\033[0m"
-        for H in "${FINAL_HOSTS[@]}"; do
-            echo "  - $H"
-        done
-        echo -e "--------------------------------------------"
 
         # --- STEP 2: SELECT ACTION ---
         # This is its own inner loop now: redrawing it (after an invalid
@@ -165,6 +170,12 @@ while true; do
                 "Run Custom Ad-Hoc Command|action_custom_command.sh"
             )
 
+            screen
+            echo -e "\033[1;32m➜ Selected target(s):\033[0m"
+            for H in "${FINAL_HOSTS[@]}"; do
+                echo "  - $H"
+            done
+            echo -e "--------------------------------------------"
             menu_title ACTION "=== ACTION MENU ==="
             for i in "${!ACTIONS[@]}"; do
                 LABEL="${ACTIONS[$i]%%|*}"
@@ -183,12 +194,10 @@ while true; do
             echo ""
 
             if [[ "$ACTION_REPLY" == "m" || "$ACTION_REPLY" == "M" ]]; then
-                echo -e "\033[1;36m↩ Back to main menu...\033[0m\n"
                 continue 3
             fi
 
             if [[ "$ACTION_REPLY" == "b" || "$ACTION_REPLY" == "B" ]]; then
-                echo -e "\033[1;36m↩ Back to host menu...\033[0m\n"
                 continue 2
             fi
 
@@ -201,7 +210,7 @@ while true; do
             [ -z "$ACTION_REPLY" ] && ACTION_REPLY=1
 
             if ! [[ "$ACTION_REPLY" =~ ^[0-9]+$ ]] || [ "$ACTION_REPLY" -le 0 ] || [ "$ACTION_REPLY" -gt "${#ACTIONS[@]}" ]; then
-                echo -e "\033[1;31m[!] Invalid action.\033[0m\n"
+                NOTE="\033[1;31m[!] Invalid action: $ACTION_REPLY\033[0m"
                 continue
             fi
 
@@ -213,11 +222,13 @@ while true; do
             # [b] / errors inside an action land back here (same hosts);
             # a finished action goes to the main menu. Only [q] ends the program.
             if [ "$ACTION_EXIT" -eq "$EXIT_BACK_TO_MENU" ]; then
-                echo -e "\033[1;36m↩ Back to action menu (same target(s) kept)...\033[0m\n"
+                echo -e "\033[1;36m↩ Back to action menu (same target(s) kept)...\033[0m"
+                KEEP=1
                 continue
             fi
             if [ "$ACTION_EXIT" -eq "$EXIT_MAIN_MENU" ]; then
-                echo -e "\033[1;36m↩ Back to main menu...\033[0m\n"
+                echo -e "\033[1;36m↩ Back to main menu...\033[0m"
+                KEEP=1
                 continue 3
             fi
 

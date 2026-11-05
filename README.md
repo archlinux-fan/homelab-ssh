@@ -22,7 +22,9 @@ Bash script you can read in a few minutes and change.
 | Run a custom command | one command you type, e.g. `uptime` or `df -h` |
 
 Hosts are done one after another. A host that doesn't answer can be retried (after you start it) or skipped.
-Every menu has `[b]` back and `[q]` quit, Enter takes the default.
+Every menu has `[b]` back and `[q]` quit, Enter takes the default. Each menu opens on a clean screen;
+what was there before scrolls up, so you can still scroll back to it. After an action its output stays
+in view, with the menu under it.
 
 ## You need
 

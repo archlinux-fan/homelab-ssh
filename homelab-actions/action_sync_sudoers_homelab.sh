@@ -12,6 +12,7 @@
 # ==============================================================================
 HOSTS=($TARGET_HOSTS)
 source "$(dirname "$0")/libs/lib_check_host.sh"
+new_screen
 SUDOERS_URL=$(sync_url "etc/sudoers.d/homelab") || exit "$EXIT_BACK_TO_MENU"
 SUDOERS_DEST="/etc/sudoers.d/homelab"
 

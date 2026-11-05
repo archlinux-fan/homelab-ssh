@@ -23,6 +23,9 @@ C_SUB=$'\033[38;2;218;162;145m'    # nord12 orange - inside an action
 menu_title() { local c="C_$1"; echo -e "${!c}\033[1m$2\033[22m"; }
 # ask <prompt> <var>
 ask() { read -rp "$1" "$2"; echo -ne '\033[0m'; }
+# new_screen: the next menu on an empty screen. The old lines scroll up into the
+# terminal's history (scroll back to see them), unlike clear, which deletes them.
+new_screen() { printf '\n%.0s' $(seq "$(tput lines 2>/dev/null || echo 40)"); printf '\033[H'; }
 
 # wait_bar <pid> <max_s>: braille dot bar filling left to right while <pid>
 # runs (full at max_s), cleared when done. 30 chars (~6-8 cm); the leading

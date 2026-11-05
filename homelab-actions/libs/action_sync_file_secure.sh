@@ -11,6 +11,7 @@
 #                        (e.g. "sudo systemctl restart ssh")
 HOSTS=($TARGET_HOSTS)
 source "$(dirname "$0")/lib_check_host.sh"
+new_screen
 [ -n "$SYNC_URL" ] || SYNC_URL=$(sync_url "$SYNC_PATH") || exit "$EXIT_BACK_TO_MENU"
 
 LOCAL_TMP="$(mktemp)"

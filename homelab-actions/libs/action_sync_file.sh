@@ -6,6 +6,7 @@
 #   SYNC_DEST  - destination path on remote host
 HOSTS=($TARGET_HOSTS)
 source "$(dirname "$0")/lib_check_host.sh"
+new_screen
 SYNC_URL=$(sync_url "$SYNC_PATH") || exit "$EXIT_BACK_TO_MENU"
 
 # Download once; -f: a missing file is an error, not an error page or an empty file on the hosts.
