@@ -21,8 +21,9 @@ C_SUB=$'\033[38;2;218;162;145m'    # nord12 orange - inside an action
 # menu_title <MAIN|HOST|ACTION|SUB> <text>: bold title; the level color
 # stays on for the menu items and prompt, until ask() resets it.
 menu_title() { local c="C_$1"; echo -e "${!c}\033[1m$2\033[22m"; }
-# ask <prompt> <var>
-ask() { read -rp "$1" "$2"; echo -ne '\033[0m'; }
+# ask <prompt> <var>: -e (readline), so arrows move the cursor instead of printing ^[[D;
+# colors in the prompt go between \001 and \002, so readline doesn't count them as width.
+ask() { read -erp "$(sed $'s/\e\\[[0-9;]*m/\001&\002/g' <<< "$1")" "$2"; echo -ne '\033[0m'; }
 # new_screen: the next menu on an empty screen. The old lines scroll up into the
 # terminal's history (scroll back to see them), unlike clear, which deletes them.
 new_screen() { printf '\n%.0s' $(seq "$(tput lines 2>/dev/null || echo 40)"); printf '\033[H'; }
