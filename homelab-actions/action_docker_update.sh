@@ -85,15 +85,12 @@ while [ $i -lt ${#HOSTS[@]} ]; do
         done
     else
         menu_title SUB "=== STACKS FOUND ON $HOST ==="
-        echo "  [Enter] ALL STACKS"
+        ROWS=("|ALL STACKS")
         for j in "${!FOLDERS[@]}"; do
-            echo "  [$((j+1))] ${FOLDERS[$j]}"
+            ROWS+=("$((j+1))|${FOLDERS[$j]}")
         done
-        echo "  [s] Skip this host"
-        echo "  [b] Back to action menu"
-        echo "  [q] Quit"
-        echo -e "--------------------------------------------"
-        ask "Choose stack number(s) (e.g. 1,3), [Enter] all or [b] action menu: " STACK_REPLY
+        pick STACK_REPLY SUB 1 "Choose stack number(s) (e.g. 1,3), [Enter] all or [b] action menu: " \
+            "${ROWS[@]}" "s|Skip this host" "b|Back to action menu" "q|Quit"
 
         if [[ "$STACK_REPLY" == "q" || "$STACK_REPLY" == "Q" ]]; then
             echo "Quit."; exit 0

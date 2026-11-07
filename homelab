@@ -65,14 +65,12 @@ while true; do
 
     screen
     menu_title MAIN "=== MAIN MENU: SELECT TAG ==="
+    ROWS=()
     for i in "${!ALL_TAGS[@]}"; do
         # Display index+1 so numbering starts at [1]
-        echo "  [$((i+1))] ${ALL_TAGS[$i]}"
+        ROWS+=("$((i+1))|${ALL_TAGS[$i]}")
     done
-    echo "  [q] Quit"
-    echo -e "--------------------------------------------"
-
-    ask "Choose target tag number: " TAG_REPLY
+    pick TAG_REPLY MAIN 0 "Choose target tag number: " "${ROWS[@]}" "q|Quit"
     echo ""
 
     if [[ "$TAG_REPLY" == "q" || "$TAG_REPLY" == "Q" ]]; then
@@ -111,16 +109,13 @@ while true; do
     while true; do
         screen
         menu_title HOST "=== HOST MENU: TAG [$SELECTED_TAG] ==="
-        echo "  [Enter] ALL HOSTS IN THIS TAG"
+        ROWS=("|ALL HOSTS IN THIS TAG")
         for i in "${!MATCHED_HOSTS[@]}"; do
             # Display index+1 so numbering starts at [1]
-            echo "  [$((i+1))] ${MATCHED_HOSTS[$i]}"
+            ROWS+=("$((i+1))|${MATCHED_HOSTS[$i]}")
         done
-        echo "  [b] Back to main menu"
-        echo "  [q] Quit"
-        echo -e "--------------------------------------------"
-
-        ask "Choose host number(s) (e.g. 1,3), [Enter] all or [b] main menu: " HOST_REPLY
+        pick HOST_REPLY HOST 1 "Choose host number(s) (e.g. 1,3), [Enter] all or [b] main menu: " \
+            "${ROWS[@]}" "b|Back to main menu" "q|Quit"
 
         if [[ "$HOST_REPLY" == "q" || "$HOST_REPLY" == "Q" ]]; then
             echo "Quit."
@@ -177,20 +172,12 @@ while true; do
             done
             echo -e "--------------------------------------------"
             menu_title ACTION "=== ACTION MENU ==="
+            ROWS=()
             for i in "${!ACTIONS[@]}"; do
-                LABEL="${ACTIONS[$i]%%|*}"
-                if [ "$i" -eq 0 ]; then
-                    echo "  [$((i+1))] $LABEL [default - Enter]"
-                else
-                    echo "  [$((i+1))] $LABEL"
-                fi
+                ROWS+=("$((i+1))|${ACTIONS[$i]%%|*}")
             done
-            echo "  [m] Back to main menu"
-            echo "  [b] Back to host menu"
-            echo "  [q] Quit"
-            echo -e "--------------------------------------------"
-
-            ask "Choose action number, [m] main menu or [b] host menu: " ACTION_REPLY
+            pick ACTION_REPLY ACTION 0 "Choose action number, [m] main menu or [b] host menu: " \
+                "${ROWS[@]}" "m|Back to main menu" "b|Back to host menu" "q|Quit"
             echo ""
 
             if [[ "$ACTION_REPLY" == "m" || "$ACTION_REPLY" == "M" ]]; then

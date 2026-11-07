@@ -24,6 +24,52 @@ menu_title() { local c="C_$1"; echo -e "${!c}\033[1m$2\033[22m"; }
 # ask <prompt> <var>: -e (readline), so arrows move the cursor instead of printing ^[[D;
 # colors in the prompt go between \001 and \002, so readline doesn't count them as width.
 ask() { read -erp "$(sed $'s/\e\\[[0-9;]*m/\001&\002/g' <<< "$1")" "$2"; echo -ne '\033[0m'; }
+
+# pick <var> <MAIN|HOST|ACTION|SUB> <multi 0|1> <prompt> "key|label"...: menu rows
+# "  [key] label"; Up/Down moves the highlight (the level color as background),
+# Space marks number rows (multi), typing works as before (1,3 / b / q ...).
+# Enter gives <var>: the typed text, else the marked keys joined by ",", else the
+# highlighted row's key (an empty key shows as [Enter]).
+pick() {
+    local -n _pick_out=$1
+    local lvl=$2 multi=$3 prompt=$4 c="C_$2"; shift 4
+    local rows=("$@") n=$# cur=0 buf="" k rest i m=() hint
+    local hl=${!c/38;2/48;2}$'\033[38;2;46;52;64m' dim=$'\033[38;2;97;110;136m'
+    hint="↑↓ select · Enter choose"
+    ((multi)) && hint="↑↓ select · Space mark · Enter choose"
+    _pick_draw() {
+        local key label line w=$(( $(tput cols 2>/dev/null || echo 80) - 1 ))
+        for ((i = 0; i < n; i++)); do
+            key=${rows[i]%%|*} label=${rows[i]#*|}
+            line="  [${key:-Enter}] ${m[i]:+✓ }$label"; line=${line:0:w}
+            if ((i == cur)); then printf '\033[K%s%s\033[0m%s\n' "$hl" "$line" "${!c}"
+            else printf '\033[K%s\n' "$line"; fi
+        done
+        printf '\033[K--------------------------------------------\n'
+        printf '\033[K%s%s, or type as before%s\n' "$dim" "$hint" "${!c}"
+        printf '\033[K%s%s' "$prompt" "$buf"
+    }
+    _pick_draw
+    while IFS= read -rsn1 k; do
+        case $k in
+            $'\e') read -rsn2 -t 0.01 rest
+                   case $rest in '[A') ((cur = (cur + n - 1) % n)) ;; '[B') ((cur = (cur + 1) % n)) ;; esac ;;
+            '') break ;;
+            ' ') if ((multi)) && [[ ${rows[cur]%%|*} =~ ^[0-9]+$ ]]; then
+                     if [[ ${m[cur]} ]]; then unset 'm[cur]'; else m[cur]=1; fi
+                 fi ;;
+            $'\177'|$'\b') buf=${buf%?} ;;
+            *) buf+=$k ;;
+        esac
+        printf '\r\033[%dA' $((n + 2)); _pick_draw
+    done
+    echo -e '\033[0m'
+    if [[ -n $buf ]]; then _pick_out=$buf
+    elif ((${#m[@]})); then
+        _pick_out=""; for i in "${!m[@]}"; do _pick_out+="${_pick_out:+,}${rows[i]%%|*}"; done
+    else _pick_out=${rows[cur]%%|*}; fi
+}
+
 # new_screen: the next menu on an empty screen. The old lines scroll up into the
 # terminal's history (scroll back to see them), unlike clear, which deletes them.
 new_screen() { printf '\n%.0s' $(seq "$(tput lines 2>/dev/null || echo 40)"); printf '\033[H'; }

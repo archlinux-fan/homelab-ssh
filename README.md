@@ -21,8 +21,10 @@ Bash script you can read in a few minutes and change.
 | Sync sshd_config, sshrc, sudoers, nanorc, zshrc, notify-os-updates.sh | copies the file from your own repo to the host; sudoers is checked with `visudo` first |
 | Run a custom command | one command you type, e.g. `uptime` or `df -h` |
 
-Hosts are done one after another. A host that doesn't answer can be retried (after you start it) or skipped.
-Every menu has `[b]` back and `[q]` quit, Enter takes the default. Each menu opens on a clean screen;
+Hosts are done one after another. A host that doesn't answer can be retried (after you start it) or skipped,
+also with `[s]` while it is still being checked.
+In the menus ↑/↓ moves the highlighted line and Enter picks it; Space marks several hosts or stacks.
+Typing still works too (`1,3`, `b`, `q`). Every menu has `[b]` back and `[q]` quit, Enter takes the default. Each menu opens on a clean screen;
 what was there before scrolls up, so you can still scroll back to it. After an action its output stays
 in view, with the menu under it.
 
