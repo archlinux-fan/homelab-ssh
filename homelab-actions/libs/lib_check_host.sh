@@ -31,8 +31,9 @@ new_screen() { printf '\n%.0s' $(seq "$(tput lines 2>/dev/null || echo 40)"); pr
 # wait_bar <pid> <max_s>: braille dot bar filling left to right while <pid>
 # runs (full at max_s), cleared when done. 30 chars (~6-8 cm); the leading
 # char rises dot by dot (⣀⣄⣤⣦⣶⣷) out of a dim nord3 track.
+# [s] stops waiting at once (kills <pid>) and returns 1.
 wait_bar() {
-    local pid="$1" max="$2" w=30 t=0 n j bar lv=(⣀ ⣄ ⣤ ⣦ ⣶ ⣷)
+    local pid="$1" max="$2" w=30 t=0 n j bar key lv=(⣀ ⣄ ⣤ ⣦ ⣶ ⣷)
     while kill -0 "$pid" 2>/dev/null; do
         n=$(( t++ * w * 6 / (max * 10) )); (( n > w * 6 )) && n=$(( w * 6 ))
         bar=$C_SUB
@@ -41,7 +42,11 @@ wait_bar() {
             elif ((j == n / 6)); then bar+=${lv[n % 6]}$'\033[38;2;76;86;106m'
             else bar+=⣀; fi
         done
-        printf '\r%s\033[0m' "$bar"; sleep 0.1
+        printf '\r%s\033[38;2;76;86;106m  [s] skip\033[0m' "$bar"
+        # Waits 0.1 s like a sleep, but a key ends it
+        if read -rsn1 -t 0.1 key && [[ $key == [Ss] ]]; then
+            kill "$pid" 2>/dev/null; printf '\r\033[K'; return 1
+        fi
     done
     printf '\r\033[K'
 }
@@ -54,7 +59,7 @@ check_host_alive() {
         # ssh in background, so the wait shows as a bar (full = 5s timeout)
         ssh -n -o ConnectTimeout=5 -o BatchMode=yes -o StrictHostKeyChecking=accept-new "$host" exit 2>/dev/null &
         pid=$!
-        wait_bar "$pid" 5
+        wait_bar "$pid" 5 || { echo -e "\033[1;33m↷ Skipping $host ...\033[0m"; return 1; }
         wait "$pid" && return 0
 
         echo -e "\033[1;31m[!] Host '$host' is unreachable (powered off / down?).\033[0m$C_SUB"
