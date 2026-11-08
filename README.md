@@ -86,7 +86,7 @@ your-repo/
 
 The `ACTIONS` list near the end of `homelab` has one `"Label|script.sh"` line per menu entry, in menu order.
 A script in `homelab-actions/` gets the chosen hosts in `$TARGET_HOSTS`; `libs/lib_check_host.sh` has the
-helpers (`check_host_alive`, `confirm_next`) and the exit codes that send you back to a menu.
+helpers (`check_host_alive`, `confirm_next`, `pick` for a menu) and the exit codes that send you back to a menu.
 
 ## Pictures
 
@@ -94,10 +94,10 @@ Made with a demo setup: the real scripts and menus, the servers' answers are mad
 
 <!-- HTML, so both columns are half the width whatever the captions -->
 <table>
-<tr><td width="50%"><img src="screenshots/main-menu.png" alt="Main menu"></td><td width="50%"><img src="screenshots/host-menu.png" alt="Host menu"></td></tr>
-<tr><td>Main menu: the tags from <code>~/.ssh/config</code></td><td>Hosts with the tag Debian</td></tr>
-<tr><td width="50%"><img src="screenshots/action-menu.png" alt="Action menu"></td><td width="50%"><img src="screenshots/docker-stacks.png" alt="Docker stacks"></td></tr>
-<tr><td>Actions for the chosen host</td><td>Docker: the stacks found on the host</td></tr>
+<tr><td width="50%"><img src="screenshots/main-menu.gif" alt="Main menu"></td><td width="50%"><img src="screenshots/host-menu.gif" alt="Host menu"></td></tr>
+<tr><td>Main menu: the tags from <code>~/.ssh/config</code>, ↑/↓ moves the highlight</td><td>Hosts with the tag Debian, Space marks several</td></tr>
+<tr><td width="50%"><img src="screenshots/action-menu.gif" alt="Action menu"></td><td width="50%"><img src="screenshots/docker-stacks.gif" alt="Docker stacks"></td></tr>
+<tr><td>Actions for the chosen host</td><td>Docker: the stacks found on the host, Space marks several</td></tr>
 <tr><td width="50%"><img src="screenshots/docker-update.png" alt="Docker update"></td><td width="50%"><img src="screenshots/os-update.png" alt="System update"></td></tr>
 <tr><td>One stack updated, old images pruned</td><td>System update</td></tr>
 <tr><td width="50%"><img src="screenshots/custom-command.png" alt="Custom command"></td><td width="50%"><img src="screenshots/unreachable.gif" alt="Unreachable host"></td></tr>

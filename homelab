@@ -31,7 +31,7 @@ SSH_CONFIG="$HOME/.ssh/config"
 # Next to this script, also when it's started through a link (e.g. ~/.local/bin/homelab)
 ACTIONS_DIR="$(dirname "$(realpath "$0")")/homelab-actions"
 
-# Shared helpers: menu colors/menu_title/ask and the EXIT_* codes, so this
+# Shared helpers: menu colors/menu_title/pick/ask and the EXIT_* codes, so this
 # script and the action scripts always agree on the same values.
 source "$ACTIONS_DIR/libs/lib_check_host.sh" || exit 1
 trap 'echo -ne "\033[0m"' EXIT # don't leave a menu color on after Ctrl+C
