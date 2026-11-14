@@ -38,8 +38,7 @@ for one job, like `OS` on every host whose packages you update together.
 - `# TAGS:` goes inside its host's block: after its `Host` line, before the next one. Write `TAGS` in capitals,
   with the colon.
 - Separate tags with commas or spaces. Capitals count: `Debian` and `debian` are two tags.
-- A tag matches as part of a word: the tag `web` also picks a host tagged `webserver`. Give tags names that
-  aren't part of other tag names.
+- A tag matches as a whole word: the tag `web` doesn't pick a host tagged `webserver`.
 - A host without a `# TAGS:` line isn't in any menu, but `ssh` still knows it.
 - Hosts are listed in the order they have in the file.
 

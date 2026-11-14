@@ -13,5 +13,10 @@ export SYNC_URL=$(curl -sf "$ZSH_PARTS_API" | jq -r --arg skip " ${ZSH_SKIP-git 
     sort_by(.name)[] | select(.name | endswith(".zsh"))
     | (.name | sub("^[0-9]+-"; "") | rtrimstr(".zsh")) as $part
     | select($skip | contains(" " + $part + " ") | not) | .download_url')
+# Nothing found (address wrong, server down): stop, or the sync would fetch SYNC_BASE itself
+if [ -z "$SYNC_URL" ]; then
+    echo -e "\033[1;31m[!] No zsh parts found at $ZSH_PARTS_API\033[0m"
+    exit "$EXIT_BACK_TO_MENU"
+fi
 export SYNC_DEST="/etc/zsh/zshrc"
 exec bash "$(dirname "$0")/libs/action_sync_file_secure.sh"

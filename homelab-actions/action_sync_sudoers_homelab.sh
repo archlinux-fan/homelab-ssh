@@ -32,7 +32,12 @@ for HOST in "${HOSTS[@]}"; do
     fi
 
     echo -e "\033[1;34m➜ Staging sudoers.d/homelab on $HOST...\033[0m"
-    REMOTE_TMP="/tmp/sudoers_homelab.$$"
+    # mktemp on the host: a name nobody there can guess or create in advance
+    REMOTE_TMP=$(ssh "$HOST" 'mktemp /tmp/homelab.XXXXXX')
+    if [[ $REMOTE_TMP != /tmp/homelab.* ]]; then
+        echo -e "\033[1;31m✗ Could not create a temp file on $HOST\033[0m"
+        continue
+    fi
 
     # Push the already-downloaded file to a temp path WITHOUT sudo.
     if ! stage_remote_file "$HOST" "$LOCAL_TMP" "$REMOTE_TMP" "sudoers.d/homelab"; then

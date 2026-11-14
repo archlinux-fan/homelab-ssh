@@ -75,9 +75,8 @@ your-repo/
 └── usr/local/bin/notify-os-updates.sh
 ```
 
-- nanorc is written without a password; the host needs a sudoers rule for it, e.g.
-  `you ALL=(root) NOPASSWD: /usr/bin/tee /etc/nanorc`.
-  All the others ask for your sudo password on purpose: they run at every login, control SSH or grant root.
+- Every sync asks for your sudo password on purpose: these files run at every login, control SSH,
+  grant root, or (nanorc) can bind keys to commands that run when root edits a file.
 - The zshrc is joined from a folder of zsh parts (`ZSH_PARTS_API`); the parts of
   [arch-dots](https://github.com/archlinux-fan/arch-dots/tree/main/.config/zsh/conf.d) work as they are.
 - Don't need an action? Delete its line from `ACTIONS` in `homelab`.

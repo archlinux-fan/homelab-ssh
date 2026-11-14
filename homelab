@@ -7,9 +7,8 @@
 #     │   ├── lib_check_host.sh               # Shared helper: host availability check,
 #     │   │                                   #   shared confirm_next prompt, and the
 #     │   │                                   #   EXIT_BACK_TO_MENU exit-code convention
-#     │   ├── action_sync_file.sh             # Generic passwordless sync (used by nanorc)
 #     │   └── action_sync_file_secure.sh      # Generic password-prompting sync (used by
-#     │                                       #   zshrc, sshrc, sshd_config, sudoers, notify-os-updates)
+#     │                                       #   zshrc, nanorc, sshrc, sshd_config, notify-os-updates)
 #     ├── action_os_update.sh                 # APT update, upgrade, autoremove, clean
 #     ├── action_docker_update.sh             # Update selected Docker Compose stack(s), auto-detected via SSH
 #     ├── action_custom_command.sh            # Custom ad-hoc command
@@ -56,7 +55,7 @@ while true; do
 
     # --- STEP 1: SELECT TARGET TAG ---
     # Sort unique tags alphabetically so the tag menu stays readable
-    ALL_TAGS=($(grep -i '# TAGS:' "$SSH_CONFIG" | sed 's/[#,]//g' | awk -F'TAGS:' '{print $2}' | tr ' ' '\n' | grep -v '^$' | sort -u))
+    ALL_TAGS=($(grep '# TAGS:' "$SSH_CONFIG" | sed 's/[#,]/ /g' | awk -F'TAGS:' '{print $2}' | tr ' ' '\n' | grep -v '^$' | sort -u))
 
     if [ ${#ALL_TAGS[@]} -eq 0 ]; then
         echo -e "\033[1;31m[!] Cannot find any lines with '# TAGS: ...' in ~/.ssh/config\033[0m"
@@ -99,9 +98,14 @@ while true; do
         if [ -n "$host" ]; then
             MATCHED_HOSTS+=("$host")
         fi
+    # A whole tag has to be equal: "web" doesn't pick a host tagged "webserver"
     done < <(awk -v tag="$SELECTED_TAG" '
         /^Host / { host=$2 }
-        /# TAGS:/ { if ($0 ~ tag) print host }
+        /# TAGS:/ {
+            sub(/.*# TAGS:/, "")
+            n = split($0, tags, /[ ,#]+/)
+            for (i = 1; i <= n; i++) if (tags[i] == tag) { print host; break }
+        }
     ' "$SSH_CONFIG")
 
     # --- STEP 1b: SUB-SELECT INDIVIDUAL HOST OR ALL ---
